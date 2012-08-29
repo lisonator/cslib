@@ -5,9 +5,6 @@
 /*
  * private functions prototypes
  */
-static int pidCompute(Block *,
-            const float *inputs, int nInputs);
-
 static int piCompute(Block *,
             const float *inputs, int nInputs);
 
@@ -16,7 +13,7 @@ static int pdCompute(Block *,
 /*
  * function declarations
  */
-int piInitialization(Block *this, 
+int initializePi(Block *this, 
         float *parameters, int nParameters,
         float *signals, int nSignals,
         int nInputs, int nOutputs)
@@ -30,13 +27,10 @@ int piInitialization(Block *this,
     if(nInputs!=1)
         return(EXIT_FAILURE);
     
-    this->parameters = parameters;
-    this->signals = signals;
-    this->nParameters = nParameters;
-    this->nSignals = nSignals;
-    this->nInputs = nInputs;
-    this->nOutputs = nOutputs;
-
+    initializeBlock(this,parameters,nParameters,
+            signals,nSignals,
+            nInputs,nOutputs);
+    
     this->compute = &piCompute;
     
     return(EXIT_SUCCESS);
@@ -64,7 +58,7 @@ static int piCompute(Block * this,
     return(EXIT_SUCCESS);
 }
 
-int pdInitialization(Block *this, 
+int initializePd(Block *this, 
         float *parameters, int nParameters,
         float *signals, int nSignals,
         int nInputs, int nOutputs)
@@ -78,12 +72,9 @@ int pdInitialization(Block *this,
     if(nInputs!=1)
         return(EXIT_FAILURE);
     
-    this->parameters = parameters;
-    this->signals = signals;
-    this->nParameters = nParameters;
-    this->nSignals = nSignals;
-    this->nInputs = nInputs;
-    this->nOutputs = nOutputs;
+    initializeBlock(this,parameters,nParameters,
+            signals,nSignals,
+            nInputs,nOutputs);
 
     this->compute = &pdCompute;
     

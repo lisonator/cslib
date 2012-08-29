@@ -29,6 +29,9 @@ extern "C" {
         float * parameters;
         float * signals;
         
+        /*added in v0.2*/
+        float ts; //sample time (default 1 for back compatibility)
+        
         /*system dimensions, nSignals >= nOutputs!!!*/
         int nParameters;
         int nSignals;
@@ -46,11 +49,11 @@ extern "C" {
     
     /*default block Initialization function which is different with
      every implementation (compare pid.c)*/
-    int blockInitialization(Block *, 
+    int initializeBlock(Block *, 
             float *parameters, int nParameters,
             float *signals, int nSignals,
             int nInputs, int nOutputs);
-    
+        
     /*function which computes block signals (evaluates function,
      which is pointed by *compute field */
     int computeSignals(Block*,

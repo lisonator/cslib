@@ -17,12 +17,6 @@
 extern "C" {
 #endif
 
-    /*pid currently unimplemented !!!!*/
-    int pidInitialization(Block *, 
-            float *parameters, int nParameters,
-            float *signals, int nSignals,
-            int nInputs, int nOutputs);
-    
     /* PI regulator
      * parameters[6]:
      * [kp, ki, minI, maxI, minU, maxU]
@@ -33,7 +27,7 @@ extern "C" {
      * inputs[1]:
      * e(k)
      */
-    int piInitialization(Block *, 
+    int initializePi(Block *, 
             float *parameters, int nParameters,
             float *signals, int nSignals,
             int nInputs, int nOutputs);    
@@ -48,7 +42,7 @@ extern "C" {
      * inputs[1]:
      * e(k)
      */
-    int pdInitialization(Block *,
+    int initializePd(Block *,
             float *parameters, int nParameters,
             float *signals, int nSignals,
             int nInputs, int nOutputs);

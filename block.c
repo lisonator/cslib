@@ -10,7 +10,7 @@ static int defaultCompute(Block *,
 /*
  * function declarations
  */
-int blockInitialization(Block *this, 
+int initializeBlock(Block *this, 
         float *parameters, int nParameters,
         float *signals, int nSignals,
         int nInputs, int nOutputs)
@@ -22,6 +22,8 @@ int blockInitialization(Block *this,
     this->nInputs = nInputs;
     this->nOutputs = nOutputs;
 
+    this->ts = 1.0;
+    
     this->compute = &defaultCompute;
     return(EXIT_SUCCESS);
 }
