@@ -12,6 +12,8 @@
 extern "C" {
 #endif
 
+    /*mode = 0 - buffer discards oldest data when overflow*/
+    /*mode = 1 - temporarily not implemented */
     struct CircularBuffer{
         void *buffer;
         void *end;

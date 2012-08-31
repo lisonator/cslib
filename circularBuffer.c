@@ -1,5 +1,6 @@
 #include "circularBuffer.h"
 #include <string.h>
+#include <assert.h>
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
@@ -7,7 +8,9 @@
 int initializeCb(struct CircularBuffer *this,
         void *buffer, int nElements, int eSize, int mode)
 {
+    assert(nElements>1 && eSize>0);
     this->buffer = buffer;
+    
     this->end = (char*)buffer + nElements*eSize;
     this->nElements = nElements;
     this->eSize = eSize;
@@ -15,6 +18,7 @@ int initializeCb(struct CircularBuffer *this,
     this->head = buffer;
     this->tail = buffer;
     this->stored = 0;
+    
     return(EXIT_SUCCESS);
 }
 

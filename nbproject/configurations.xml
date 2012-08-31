@@ -8,6 +8,7 @@
       <itemPath>blockLogger.h</itemPath>
       <itemPath>circularBuffer.h</itemPath>
       <itemPath>cslib.h</itemPath>
+      <itemPath>defs.h</itemPath>
       <itemPath>pid.h</itemPath>
       <itemPath>sfsm.h</itemPath>
     </logicalFolder>

@@ -1,17 +1,32 @@
 #include "sfsm.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
+
+#define EXIT_SUCCESS 0
+#define EXIT_FAILURE 1
 
 static int applyTransition(struct Machine*,
         const struct Transition*);
 
-int test(void)
+int initializeMachine(struct Machine *m, int nEvents, int nStates,
+        struct Transition *const initial,
+        struct Transition **const table,
+        struct Machine* parent, State parentS)
 {
-    printf("srututut\n");
-    return(5);
+    assert(nEvents>0);
+    assert(nStates>0);
+    m->nEvents = nEvents;
+    m->nStates = nStates;
+    m->initial = initial;
+    m->table = table;
+    m->parentM = parent;
+    m->parentS = parentS;
+    m->current = 0;
+    return(EXIT_SUCCESS);
 }
 
-int initializeMachine(struct Machine* m)
+int runMachine(struct Machine* m)
 {
     return(applyTransition(m,m->initial));
 }
@@ -38,11 +53,8 @@ static int applyTransition(struct Machine* m,
         const struct Transition * t)
 {
     int ret;
-    //int (*funptr)(struct Machine *) = &initializeMachine;
-    int (*actionptr)(void) = t->action;
-    //printf("actioning...\n");
-    ret = (actionptr)();
-    printf("action return: %d\n",ret);
+    int (*actionptr)(struct Machine*) = t->action;
+    ret = (actionptr)(m);
     if(ret)
         return(EXIT_FAILURE);
     m->current = t->to;

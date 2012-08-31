@@ -17,7 +17,6 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-int test(void);
     /*States and events are implemented as int */
     typedef int State; 
     typedef int Event;
@@ -30,7 +29,7 @@ int test(void);
      * Otherwise sub = NULL  */
     struct Transition{
         const State to; //transition occurs to State 'to'
-        int (* action)(void); //during transition action is made
+        int (* action)(struct Machine *); //during transition action is made
         struct Machine *const sub; //machine within target state
     };
     
@@ -39,17 +38,21 @@ int test(void);
      * if machine is nested in others machine state parentM and parentS
      * members must be specified. Otherwise parentM = NULL, parentS = -1 */
     struct Machine{
-        const int nEvents; //number of events
-        const int nStates; //number of states
-        const struct Transition * const initial; //initial transition
-        const struct Transition **const table; //transition table
-        const struct Machine * parentM; //parent machine
-        const State parentS; //parent state
+        int nEvents; //number of events
+        int nStates; //number of states
+        struct Transition * initial; //initial transition
+        struct Transition **table; //transition table
+        struct Machine * parentM; //parent machine
+        State parentS; //parent state
         
         State current; //current state
     };
     
-    int initializeMachine(struct Machine*);
+    int runMachine(struct Machine*);
+    int initializeMachine(struct Machine*, int nEvents, int nStates,
+            struct Transition *const initial,
+            struct Transition **const table,
+            struct Machine* parent, State parentS);
     int handleEvent(struct Machine*,Event);
     
 #ifdef	__cplusplus
