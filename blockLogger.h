@@ -8,9 +8,9 @@
 #ifndef BLOCKLOGGER_H
 #define	BLOCKLOGGER_H
 
+#include "sfsm.h"
 #include "block.h"
 #include "circularBuffer.h"
-#include "sfsm.h"
 
 #ifdef	__cplusplus
 extern "C" {
@@ -33,6 +33,9 @@ extern "C" {
     int startBl(struct BlockLogger*);
     int pauseBl(struct BlockLogger*);
     int stopBl(struct BlockLogger*); //pause + flush
+    int tickBl(struct BlockLogger*);
+    int getSamples(struct BlockLogger*,
+            float* data, int size, int n);
 
 #ifdef	__cplusplus
 }

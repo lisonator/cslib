@@ -12,8 +12,6 @@
 extern "C" {
 #endif
 
-    /*mode = 0 - buffer discards oldest data when overflow*/
-    /*mode = 1 - temporarily not implemented */
     struct CircularBuffer{
         void *buffer;
         void *end;
@@ -24,14 +22,63 @@ extern "C" {
         void *head;
         void *tail;
     };
-
+    /**
+    * initializeCb - Initialize Circular Buffer
+    * @buffer: pointer to place in memory where data will be stored
+    * @nElements: number of elements in buffer
+    * @eSize: size of single element (in bytes)
+    * @mode: mode of operation (currently mode==0)     !!!TODO!!!
+    * 
+    * Initialize circular/ring/fifo buffer, return(0) when success
+    * mode = 0 - buffer discards oldest data when overflow
+    */
     int initializeCb(struct CircularBuffer*,
             void *buffer, int nElements, int eSize, int mode);
-    
+
+    /**
+    * popCb - take one element from buffer and write it to memory 
+     * pointed by item
+    * @item: pointer to place in memory where data will be copied
+    * 
+    * return(0) when success
+    */    
     int popCb(struct CircularBuffer*,
             void *item);
+    
+    /**
+    * multiPopCb - take multiple elements from buffer and write it to memory 
+     * pointed by item
+    * @item: pointer to place in memory where data will be copied
+    * @nItems: number of items you want to copy
+    * 
+    * function returns the number of copied elements
+    */    
+    int multiPopCb(struct CircularBuffer*,
+            void *item, int maxItems);
+    
+    /**
+    * allPopCb - take all elements from buffer and write them to memory 
+     * pointed by item
+    * @item: pointer to place in memory where data will be copied
+    * @maxItems: maximum number of copied items
+    * 
+    * function returns the number of copied elements
+    */
+    int allPopCb(struct CircularBuffer*, 
+            void *items, int nItems);  
+    
+    /**
+    * pushCb - add an element to buffer
+    * @item: pointer element
+    * 
+    * function returns 1 if tail has been overwritten
+    */
     int pushCb(struct CircularBuffer*,
             const void *item);
+
+    /**
+    * flush - buffer tail = buffer head
+    */    
     void flush(struct CircularBuffer*);
 
 

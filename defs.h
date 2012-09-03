@@ -9,6 +9,7 @@
 #define	DEFS_H
 
 #include <stddef.h>
+
 /**
  * container_of - cast a member of a structure out to the containing structure
  * @ptr:	the pointer to the member.

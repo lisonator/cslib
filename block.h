@@ -17,8 +17,6 @@
 #ifndef BLOCK_H
 #define	BLOCK_H
 
-#include <stdlib.h>
-
 #ifdef	__cplusplus
 extern "C" {
 #endif

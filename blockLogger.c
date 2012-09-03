@@ -2,7 +2,7 @@
 #include "sfsm.h"
 #include <assert.h>
 #include "defs.h"
-#include <stdio.h>
+#include "errcodes.h"
 
 enum states{
     S1_STANDBY,
@@ -20,21 +20,21 @@ enum events{
 
 static int aInit(struct Machine *m){
     //struct BlockLogger * b = container_of(m,struct BlockLogger,logic);
-    return(EXIT_SUCCESS);
+    return(SUCCESS);
 }
 
 static int aFlush(struct Machine *m){
     struct BlockLogger * b = container_of(m,struct BlockLogger,logic);
     flush(&b->buf);
-    return(EXIT_SUCCESS);
+    return(SUCCESS);
 }
 
 static int aRun(struct Machine *m){   
-    return(EXIT_SUCCESS);
+    return(SUCCESS);
 }
 
 static int aStop(struct Machine *m){
-    return(EXIT_SUCCESS);
+    return(SUCCESS);
 }
 
 static int aTick(struct Machine *m){
@@ -83,4 +83,19 @@ int pauseBl(struct BlockLogger* this){
 int stopBl(struct BlockLogger* this){
     int error = handleEvent(&this->logic, E3_STOP);
     return(handleEvent(&this->logic, E1_FLUSH) || error);
+}
+
+int tickBl(struct BlockLogger *this)
+{
+    return(handleEvent(&this->logic, E4_TICK));
+}
+
+int getSamples(struct BlockLogger *this,
+            float* data, int size, int n)
+{
+    int i;
+    if(n*this->nSignals>size)
+        return(1);
+
+    return(multiPopCb(&this->buf,(void*)data,n));
 }

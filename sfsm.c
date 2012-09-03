@@ -2,9 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-
-#define EXIT_SUCCESS 0
-#define EXIT_FAILURE 1
+#include "errcodes.h"
 
 static int applyTransition(struct Machine*,
         const struct Transition*);
@@ -23,7 +21,7 @@ int initializeMachine(struct Machine *m, int nEvents, int nStates,
     m->parentM = parent;
     m->parentS = parentS;
     m->current = 0;
-    return(EXIT_SUCCESS);
+    return(SUCCESS);
 }
 
 int runMachine(struct Machine* m)
@@ -36,16 +34,14 @@ int handleEvent(struct Machine* m,Event e)
     /*check if parent machine is in parent state*/
     if(m->parentM!=NULL)
         if(m->parentM->current != m->parentS)
-            return(EXIT_FAILURE); //event not handled
+            return(SFSM_E_PMDS); //event not handled parent m in dif state
 
     if(e>=m->nEvents)
-        return(EXIT_FAILURE);
+        return(SFSM_E_OOR); //event not handled Out Of Range
 
     const struct Transition *t;
     t = *(m->table + m->nEvents*m->current + e);
-    if (t==NULL)
-        return(EXIT_FAILURE);
-
+    assert(t!=NULL);
     return(applyTransition(m,t));
 }
 
@@ -56,9 +52,9 @@ static int applyTransition(struct Machine* m,
     int (*actionptr)(struct Machine*) = t->action;
     ret = (actionptr)(m);
     if(ret)
-        return(EXIT_FAILURE);
+        return(ret);
     m->current = t->to;
     if(t->sub!=NULL)
         return(applyTransition(t->sub,t->sub->initial));
-    return(EXIT_SUCCESS);
+    return(SFSM_E_APP);
 }

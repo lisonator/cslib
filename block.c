@@ -1,6 +1,5 @@
 #include "block.h"
-#define	EXIT_SUCCESS	0
-#define	EXIT_FAILURE	1
+#include "errcodes.h"
 /*
  * private functions prototypes
  */
@@ -25,7 +24,7 @@ int initializeBlock(Block *this,
     this->ts = 1.0;
     
     this->compute = &defaultCompute;
-    return(EXIT_SUCCESS);
+    return(SUCCESS);
 }
     
 int defaultCompute(Block * this,
@@ -33,10 +32,10 @@ int defaultCompute(Block * this,
 {
     int i;
     if(nInputs != this->nInputs)
-        return(EXIT_FAILURE);
+        return(ERR_BLK_CMP);
     for(i=0;i<this->nSignals;++i)
         *(this->signals+i) = i;
-    return(EXIT_SUCCESS);
+    return(SUCCESS);
 }
 
 int computeSignals(Block * this,
@@ -50,7 +49,7 @@ int resetSignals(Block* this)
     int i;
     for(i=0;i<this->nSignals;++i)
         *(this->signals+i) = 0;
-    return(EXIT_SUCCESS);
+    return(SUCCESS);
 }
 
 float *getOutputs(Block * this)

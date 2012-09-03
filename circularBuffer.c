@@ -1,9 +1,8 @@
 #include "circularBuffer.h"
 #include <string.h>
 #include <assert.h>
-
-#define EXIT_SUCCESS 0
-#define EXIT_FAILURE 1
+#include "defs.h"
+#include "errcodes.h"
 
 int initializeCb(struct CircularBuffer *this,
         void *buffer, int nElements, int eSize, int mode)
@@ -19,21 +18,39 @@ int initializeCb(struct CircularBuffer *this,
     this->tail = buffer;
     this->stored = 0;
     
-    return(EXIT_SUCCESS);
+    return(SUCCESS);
 }
 
 int popCb(struct CircularBuffer *this,
         void *item)
 {
    if(this->stored == 0)
-       return(EXIT_FAILURE);
+       return(1);
    int i;
    memcpy(item, this->tail, this->eSize);
    this->tail = (char*)this->tail + this->eSize;
    if(this->tail == this->end)
        this->tail = this->buffer;
    this->stored--;
-   return(EXIT_SUCCESS);
+   return(SUCCESS);
+}
+
+int multiPopCb(struct CircularBuffer *this,
+        void *items, int nItems)
+{
+    int i;
+    if(this->stored<nItems)
+        nItems = this->stored;
+    for(i=0;i<nItems;++i)
+        popCb(this,(char*)items + this->eSize * i);
+    return(nItems);
+}
+
+int allPopCb(struct CircularBuffer *this, 
+        void *items, int maxItems)
+{
+    maxItems = maxItems>this->stored ? this->stored : maxItems;
+    return(multiPopCb(this,items,this->stored));
 }
 
 int pushCb(struct CircularBuffer *this,
@@ -47,10 +64,9 @@ int pushCb(struct CircularBuffer *this,
     if(this->stored>this->nElements){
         this->stored = this->nElements;
         this->tail = this->head;
-        return(EXIT_FAILURE);
-        //EXIT_FAILURE means that data has been overwritten
+        return(1);
     }
-    return(EXIT_SUCCESS);
+    return(SUCCESS);
 }
 void flush(struct CircularBuffer *this)
 {
