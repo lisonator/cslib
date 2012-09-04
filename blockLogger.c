@@ -18,8 +18,7 @@ enum events{
     nEvents
 };
 
-static int aInit(struct Machine *m){
-    //struct BlockLogger * b = container_of(m,struct BlockLogger,logic);
+inline static int aInit(struct Machine *m){
     return(SUCCESS);
 }
 
@@ -40,6 +39,7 @@ static int aStop(struct Machine *m){
 static int aTick(struct Machine *m){
     struct BlockLogger * b = container_of(m,struct BlockLogger,logic);
     pushCb(&b->buf,(void*)b->watched->signals);
+    return(SUCCESS);
 }
 
 static struct Transition tInitial = {S1_STANDBY, &aInit, NULL};
@@ -93,8 +93,7 @@ int tickBl(struct BlockLogger *this)
 int getSamples(struct BlockLogger *this,
             float* data, int size, int n)
 {
-    int i;
-    if(n*this->nSignals>size)
+    if(n*this->nSignals > size)
         return(1);
 
     return(multiPopCb(&this->buf,(void*)data,n));

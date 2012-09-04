@@ -1,6 +1,5 @@
 #include "sfsm.h"
 #include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
 #include "errcodes.h"
 
@@ -41,7 +40,8 @@ int handleEvent(struct Machine* m,Event e)
 
     const struct Transition *t;
     t = *(m->table + m->nEvents*m->current + e);
-    assert(t!=NULL);
+    if(t==NULL)
+        return(SFSM_E_TT);//no transition prescribed to event-state pair
     return(applyTransition(m,t));
 }
 

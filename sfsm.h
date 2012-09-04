@@ -22,7 +22,8 @@ extern "C" {
     enum event_returns{
         SFSM_E_APP = 0, //event handled
         SFSM_E_PMDS = 1000,
-        SFSM_E_OOR
+        SFSM_E_OOR,
+        SFSM_E_TT
     };
     
     /*forward declaration of Machine struct*/
