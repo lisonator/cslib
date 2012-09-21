@@ -36,6 +36,7 @@ extern "C" {
     int tickBl(struct BlockLogger*);
     int getSamples(struct BlockLogger*,
             float* data, int size, int n);
+    int nSamples(struct BlockLogger*);
 
 #ifdef	__cplusplus
 }

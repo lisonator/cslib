@@ -73,7 +73,7 @@ extern "C" {
      * if machine has submachine within target state, then submachine's
      * initial transition is performed
      * 
-     * TODO: machine will break when initial transition returns non-zero value
+     * FIXME: machine will break when initial transition returns non-zero value
     */    
     int handleEvent(struct Machine*,Event);
     

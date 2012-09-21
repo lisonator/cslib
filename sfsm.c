@@ -1,6 +1,8 @@
+#define F_NUM 1
+
 #include "sfsm.h"
 #include <stdlib.h>
-#include <assert.h>
+#include "customassert.h"
 #include "errcodes.h"
 
 static int applyTransition(struct Machine*,
@@ -11,8 +13,8 @@ int initializeMachine(struct Machine *m, int nEvents, int nStates,
         struct Transition **const table,
         struct Machine* parent, State parentS)
 {
-    assert(nEvents>0);
-    assert(nStates>0);
+    cassert(nEvents>0);
+    cassert(nStates>0);
     m->nEvents = nEvents;
     m->nStates = nStates;
     m->initial = initial;

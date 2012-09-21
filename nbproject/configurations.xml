@@ -8,6 +8,7 @@
       <itemPath>blockLogger.h</itemPath>
       <itemPath>circularBuffer.h</itemPath>
       <itemPath>cslib.h</itemPath>
+      <itemPath>customassert.h</itemPath>
       <itemPath>defs.h</itemPath>
       <itemPath>errcodes.h</itemPath>
       <itemPath>pid.h</itemPath>
@@ -23,6 +24,7 @@
       <itemPath>block.c</itemPath>
       <itemPath>blockLogger.c</itemPath>
       <itemPath>circularBuffer.c</itemPath>
+      <itemPath>customassert.c</itemPath>
       <itemPath>pid.c</itemPath>
       <itemPath>sfsm.c</itemPath>
     </logicalFolder>

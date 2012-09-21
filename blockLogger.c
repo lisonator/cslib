@@ -1,6 +1,6 @@
 #include "blockLogger.h"
 #include "sfsm.h"
-#include <assert.h>
+#include "customassert.h"
 #include "defs.h"
 #include "errcodes.h"
 
@@ -24,7 +24,7 @@ inline static int aInit(struct Machine *m){
 
 static int aFlush(struct Machine *m){
     struct BlockLogger * b = container_of(m,struct BlockLogger,logic);
-    flush(&b->buf);
+    flushCb(&b->buf);
     return(SUCCESS);
 }
 
@@ -94,7 +94,12 @@ int getSamples(struct BlockLogger *this,
             float* data, int size, int n)
 {
     if(n*this->nSignals > size)
-        return(1);
+        return(0);
 
     return(multiPopCb(&this->buf,(void*)data,n));
+}
+
+int nSamples(struct BlockLogger* this)
+{
+	return(this->buf.stored);
 }

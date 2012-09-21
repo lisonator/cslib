@@ -1,13 +1,15 @@
 #include "circularBuffer.h"
 #include <string.h>
-#include <assert.h>
+#include "customassert.h"
 #include "defs.h"
 #include "errcodes.h"
+
+FILENUM(30)
 
 int initializeCb(struct CircularBuffer *this,
         void *buffer, int nElements, int eSize, int mode)
 {
-    assert(nElements>1 && eSize>0);
+    cassert(nElements>1 && eSize>0);
     this->buffer = buffer;
     
     this->end = (char*)buffer + nElements*eSize;
@@ -26,12 +28,11 @@ int popCb(struct CircularBuffer *this,
 {
    if(this->stored == 0)
        return(1);
-   int i;
    memcpy(item, this->tail, this->eSize);
    this->tail = (char*)this->tail + this->eSize;
    if(this->tail == this->end)
        this->tail = this->buffer;
-   this->stored--;
+   (this->stored)--;
    return(SUCCESS);
 }
 
@@ -56,11 +57,13 @@ int allPopCb(struct CircularBuffer *this,
 int pushCb(struct CircularBuffer *this,
         const void *item)
 {   
+    if(this->mode && this->stored>=this->nElements)
+        return(2);
     memcpy(this->head, item, this->eSize);
     this->head = (char*)this->head + this->eSize;
     if(this->head == this->end)
         this->head = this->buffer;
-    this->stored++;
+    (this->stored)++;
     if(this->stored>this->nElements){
         this->stored = this->nElements;
         this->tail = this->head;
@@ -68,7 +71,7 @@ int pushCb(struct CircularBuffer *this,
     }
     return(SUCCESS);
 }
-void flush(struct CircularBuffer *this)
+void flushCb(struct CircularBuffer *this)
 {
     this->head = this->buffer;
     this->tail = this->buffer;

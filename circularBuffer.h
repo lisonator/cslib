@@ -30,7 +30,8 @@ extern "C" {
     * @mode: mode of operation (currently mode==0)     !!!TODO!!!
     * 
     * Initialize circular/ring/fifo buffer, return(0) when success
-    * mode = 0 - buffer discards oldest data when overflow
+    * mode == 0 - buffer discards oldest data when overflow
+    * mode == 1 - buffer not accepts new data when full
     */
     int initializeCb(struct CircularBuffer*,
             void *buffer, int nElements, int eSize, int mode);
@@ -41,6 +42,7 @@ extern "C" {
     * @item: pointer to place in memory where data will be copied
     * 
     * return(0) when success
+    * return(1) when no element in buffer
     */    
     int popCb(struct CircularBuffer*,
             void *item);
@@ -72,6 +74,7 @@ extern "C" {
     * @item: pointer element
     * 
     * function returns 1 if tail has been overwritten
+    * function returns 2 if data is not written (mode=1)
     */
     int pushCb(struct CircularBuffer*,
             const void *item);
@@ -79,7 +82,7 @@ extern "C" {
     /**
     * flush - buffer tail = buffer head
     */    
-    void flush(struct CircularBuffer*);
+    void flushCb(struct CircularBuffer*);
 
 
 #ifdef	__cplusplus
