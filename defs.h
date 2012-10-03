@@ -37,7 +37,7 @@ extern "C" {
         (value > max) ? max : ((value >= min) ? value : min);})    
 
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))
-#define get_value_from(type,addr) (type) *(type*)(addr)
+#define get_value_from(type,addr) *(type*)(addr)
     
 #ifdef	__cplusplus
 }

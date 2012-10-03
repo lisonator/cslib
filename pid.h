@@ -20,8 +20,8 @@ extern "C" {
     /* PI regulator
      * parameters[6]:
      * [kp, ki, minI, maxI, minU, maxU]
-     * signals[2]:
-     * [u(k), i(k)]
+     * signals[3]:
+     * [u(k), i(k), e(k)]
      * outputs[1]:
      * u(k)
      * inputs[1]:
@@ -35,8 +35,8 @@ extern "C" {
     /* PD regulator
      * parameters[4]:
      * [kp, kd, minU, maxU]
-     * signals[2]:
-     * [u(k), d(k)]
+     * signals[3]:
+     * [u(k), d(k), e(k)]
      * outputs[1]:
      * u(k)
      * inputs[1]:

@@ -21,7 +21,7 @@ int initializePi(Block *this,
     int err;
     if(nParameters!=6)
         return(ERR_BLK_INIT);
-    if(nSignals!=2)
+    if(nSignals!=3)
         return(ERR_BLK_INIT);
     if(nOutputs!=1)
         return(ERR_BLK_INIT);
@@ -44,7 +44,10 @@ static int piCompute(Block * this,
     
     if(nInputs != this->nInputs)
         return(ERR_BLK_CMP);
-        
+
+    /* error signal*/
+    sig[2] = inputs[0];
+
     /* compute integral signal*/
     temp = sig[1] + par[1]*inputs[0];
     sig[1] = temp > par[3] ? par[3] :
@@ -65,7 +68,7 @@ int initializePd(Block *this,
     int err;
     if(nParameters!=4)
         return(ERR_BLK_INIT);
-    if(nSignals!=2)
+    if(nSignals!=3)
         return(ERR_BLK_INIT);
     if(nOutputs!=1)
         return(ERR_BLK_INIT);
@@ -88,7 +91,10 @@ static int pdCompute(Block * this,
     
     if(nInputs != this->nInputs)
         return(ERR_BLK_CMP);
-        
+
+    /* error signal*/
+    sig[2] = inputs[0];
+
     /* compute derivative signal*/
     temp = (inputs[0]-sig[1])*par[1];
     sig[1] = inputs[0];

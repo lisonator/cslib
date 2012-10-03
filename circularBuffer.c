@@ -4,7 +4,7 @@
 #include "defs.h"
 #include "errcodes.h"
 
-FILENUM(30)
+FILENUM(1000)
 
 int initializeCb(struct CircularBuffer *this,
         void *buffer, int nElements, int eSize, int mode)
