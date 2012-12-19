@@ -5,13 +5,12 @@
 #include "customassert.h"
 #include "errcodes.h"
 
-static int applyTransition(struct Machine*,
+static int applyTransition(volatile struct Machine*,
         const struct Transition*);
 
-int initializeMachine(struct Machine *m, int nEvents, int nStates,
+int initializeMachine(volatile struct Machine *m, int nEvents, int nStates,
         struct Transition *const initial,
-        struct Transition **const table,
-        struct Machine* parent, State parentS)
+        struct Transition **const table)
 {
     cassert(nEvents>0);
     cassert(nStates>0);
@@ -19,44 +18,57 @@ int initializeMachine(struct Machine *m, int nEvents, int nStates,
     m->nStates = nStates;
     m->initial = initial;
     m->table = table;
-    m->parentM = parent;
-    m->parentS = parentS;
     m->current = 0;
+	m->processing = -1; //-1 means: not processing
+	m->eventBuffer = -1;
     return(SUCCESS);
 }
 
-int runMachine(struct Machine* m)
+int runMachine(volatile struct Machine* m)
 {
     return(applyTransition(m,m->initial));
 }
 
-int handleEvent(struct Machine* m,Event e)
+int _handleEvent(volatile struct Machine* m,Event e)
 {
-    /*check if parent machine is in parent state*/
-    if(m->parentM!=NULL)
-        if(m->parentM->current != m->parentS)
-            return(SFSM_E_PMDS); //event not handled parent m in dif state
-
-    if(e>=m->nEvents)
-        return(SFSM_E_OOR); //event not handled Out Of Range
-
-    const struct Transition *t;
+	const struct Transition *t;
     t = *(m->table + m->nEvents*m->current + e);
     if(t==NULL)
-        return(SFSM_E_TT);//no transition prescribed to event-state pair
+		return(0);
     return(applyTransition(m,t));
 }
 
-static int applyTransition(struct Machine* m,
+int handleEvent(volatile struct Machine * m, Event e)
+{
+    if(e>=m->nEvents)
+        return(SFSM_E_OOR); //event not handled Out Of Range
+		
+	if(m->processing >= 0) //event is processing
+		if(m->eventBuffer==-1) { //buffer is free
+			m->eventBuffer = e;
+			return(SFSM_E_BUF); //event buffered
+		}
+		else
+			return(SFSM_E_BOF); //event buffer overflow
+	
+	else {
+		m->processing = e;
+		_handleEvent(m,e);
+	}
+	
+	if(m->eventBuffer!=-1) {//we have to process event in buffer
+		_handleEvent(m,m->eventBuffer);
+		m->eventBuffer = -1;
+	}
+	m->processing = -1;
+	return(0);
+}
+
+static int applyTransition(volatile struct Machine* m,
         const struct Transition * t)
 {
-    int ret;
-    int (*actionptr)(struct Machine*) = t->action;
-    ret = (actionptr)(m);
-    if(ret)
-        return(ret);
+    int (*actionptr)(volatile struct Machine*) = t->action;
+    (actionptr)(m);
     m->current = t->to;
-    if(t->sub!=NULL)
-        return(applyTransition(t->sub,t->sub->initial));
-    return(SFSM_E_APP);
+    return(0);
 }

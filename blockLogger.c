@@ -64,7 +64,7 @@ int initializeBlockLogger(struct BlockLogger *this, struct Block *towatch,
             storageSize/this->nSignals,
             sizeof(float)*this->nSignals,0);
     error = initializeMachine(&this->logic,nEvents,nStates,
-            &tInitial,&logicTT[0],NULL,-1) || error;
+            &tInitial,&logicTT[0]) || error;
     return(runMachine(&this->logic)||error);
 }
 
